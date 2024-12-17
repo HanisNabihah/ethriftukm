@@ -152,7 +152,7 @@ class _RegisterFirestorePageState extends State<RegisterFirestorePage> {
                 const SizedBox(height: 10),
                 buildConfirmPassword(),
                 const SizedBox(height: 26),
-                Container(
+                SizedBox(
                   width: 300,
                   child: RawMaterialButton(
                     fillColor: const Color.fromARGB(255, 101, 13, 6),

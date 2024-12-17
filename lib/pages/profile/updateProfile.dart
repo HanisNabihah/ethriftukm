@@ -103,7 +103,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
         ),
         title: const Text(
           'Kemaskini Profil',
-          // style: Theme.of(context).textTheme.headline6,
         ),
       ),
       body: StreamBuilder<DocumentSnapshot>(

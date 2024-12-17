@@ -1,27 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class listUser extends StatefulWidget {
-  const listUser({Key? key});
+class ListUser extends StatefulWidget {
+  const ListUser({super.key});
 
   @override
-  State<listUser> createState() => _listUserState();
+  State<ListUser> createState() => _ListUserState();
 }
 
-class _listUserState extends State<listUser> {
-  //fetch users data
+class _ListUserState extends State<ListUser> {
   Future<List<Map<String, dynamic>>> _fetchUsersData() async {
     try {
       QuerySnapshot userSnapshot =
           await FirebaseFirestore.instance.collection('Users').get();
       List<Map<String, dynamic>> usersData = userSnapshot.docs.map((doc) {
         Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
-        userData['userId'] = doc.id; // Assign userId to each user data
+        userData['userId'] = doc.id;
         return userData;
       }).toList();
       return usersData;
     } catch (error) {
-      // Handle error
       print('Error fetching users data: $error');
       return [];
     }
@@ -33,7 +31,6 @@ class _listUserState extends State<listUser> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -42,7 +39,6 @@ class _listUserState extends State<listUser> {
         ),
         title: const Text(
           'Senarai Pengguna',
-          // style: Theme.of(context).textTheme.headline6,
         ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
@@ -61,7 +57,6 @@ class _listUserState extends State<listUser> {
                 itemCount: usersData.length,
                 itemBuilder: (context, index) {
                   Map<String, dynamic> userData = usersData[index];
-                  // Return a ListTile or any other widget to display user data
                   return Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     child: Material(
@@ -128,7 +123,6 @@ class _listUserState extends State<listUser> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    // Implement delete functionality here
                                     _showDeleteDialog(userData['userId']);
                                   },
                                   child: const Icon(
@@ -162,20 +156,17 @@ class _listUserState extends State<listUser> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Add your reasons for deletion here
                 ListTile(
                   title: const Text("Pengguna Tidak Aktif"),
                   onTap: () {
-                    // Implement the delete logic for reason 1
                     Navigator.pop(context);
-                    _showConfirmationDialog(userId); // Close the dialog
+                    _showConfirmationDialog(userId);
                   },
                 ),
                 ListTile(
                   title: const Text("Lain-Lain"),
                   onTap: () {
-                    // Implement the delete logic for reason 2
-                    Navigator.pop(context); // Close the dialog
+                    Navigator.pop(context);
                     _showConfirmationDialog(userId);
                   },
                 ),
@@ -185,8 +176,7 @@ class _listUserState extends State<listUser> {
           actions: [
             TextButton(
               onPressed: () {
-                // Implement cancel logic
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context);
               },
               child: const Text('Batal'),
             ),
@@ -207,24 +197,17 @@ class _listUserState extends State<listUser> {
             TextButton(
               onPressed: () async {
                 try {
-                  // Get a reference to the user document in Firestore
                   final userDocRef = FirebaseFirestore.instance
                       .collection('Users')
                       .doc(userId);
-                  // Delete the user document
                   await userDocRef.delete();
-                  // Inform the user that deletion was successful
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('Pengguna berjaya dipadam.'),
                   ));
-                  // Refresh the user list
                   setState(() {});
-                  // Close the confirmation dialog
                   Navigator.pop(context);
                 } catch (error) {
-                  // Handle errors if deletion fails
                   print('Error deleting user: $error');
-                  // Inform the user about the error
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('Ralat: Gagal memadam pengguna.'),
                   ));
@@ -234,7 +217,7 @@ class _listUserState extends State<listUser> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the confirmation dialog
+                Navigator.pop(context);
               },
               child: const Text('Tidak'),
             ),

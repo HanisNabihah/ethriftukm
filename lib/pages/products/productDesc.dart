@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'checkoutProduct.dart';
 
-class productDescPage extends StatefulWidget {
+class ProductDescPage extends StatefulWidget {
   final String imageUrl;
   final String productName;
   final double productPrice;
@@ -14,7 +14,7 @@ class productDescPage extends StatefulWidget {
   final String sellerId;
   final String productId;
 
-  const productDescPage({
+  const ProductDescPage({
     Key? key,
     required this.imageUrl,
     required this.productName,
@@ -27,10 +27,10 @@ class productDescPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<productDescPage> createState() => _productDescPageState();
+  State<ProductDescPage> createState() => _ProductDescPageState();
 }
 
-class _productDescPageState extends State<productDescPage> {
+class _ProductDescPageState extends State<ProductDescPage> {
   String selectedPaymentMethod = '';
   bool isLiked = false;
 
@@ -154,7 +154,7 @@ class _productDescPageState extends State<productDescPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => checkoutProductPage(
+                            builder: (context) => CheckoutProductPage(
                               imageUrl: widget.imageUrl,
                               productName: widget.productName,
                               productPrice: widget.productPrice,

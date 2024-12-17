@@ -37,7 +37,7 @@ class LikesPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => productDescPage(
+                        builder: (context) => ProductDescPage(
                           imageUrl: product['imageUrl'],
                           productName: product['productName'],
                           productPrice: product['productPrice'],
@@ -66,7 +66,6 @@ class LikesPage extends StatelessWidget {
                       ],
                     ),
                     child: ListTile(
-                      //title: Image.network(product['imageUrl']),
                       title: SizedBox(
                         height: 160,
                         width: 200,
@@ -75,8 +74,6 @@ class LikesPage extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      //leading: Text(product['productName']),
-
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

@@ -17,18 +17,16 @@ class _ComputerTechPageState extends State<ComputerTechPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize the future to fetch products
     _productsFuture = _fetchProducts();
   }
 
   Future<List<DocumentSnapshot>> _fetchProducts() async {
-    // Query Firestore to fetch products
-    QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await FirebaseFirestore.instance
-            .collection('AllProducts')
-            .where('category', isEqualTo: "Computer Tech")
-            .where('availability', isEqualTo: 'available') // Filter by category
-            .get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('AllProducts')
+        .where('category', isEqualTo: "Computer Tech")
+        .where('availability', isEqualTo: 'available')
+        .get();
     return querySnapshot.docs;
   }
 
@@ -38,12 +36,9 @@ class _ComputerTechPageState extends State<ComputerTechPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const MainMenuPage()), // Replace MainMenu with your main menu widget
+              MaterialPageRoute(builder: (context) => const MainMenuPage()),
               (Route<dynamic> route) => false,
             );
           },
@@ -94,7 +89,7 @@ class _ComputerTechPageState extends State<ComputerTechPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => productDescPage(
+                                  builder: (context) => ProductDescPage(
                                     imageUrl: products[i]['image'],
                                     productName: products[i]['name'],
                                     productPrice: products[i]['price'],

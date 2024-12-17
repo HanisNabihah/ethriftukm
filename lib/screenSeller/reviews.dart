@@ -11,12 +11,9 @@ class ReviewPage extends StatefulWidget {
 
 @override
 class _ReviewPageState extends State<ReviewPage> {
-  //late Future<List<DocumentSnapshot>> _reviewsFuture;
-
   @override
   void initState() {
     super.initState();
-    // _reviewsFuture = _fetchReview();
   }
 
   Future<List<DocumentSnapshot>> _fetchReview() async {
@@ -29,12 +26,12 @@ class _ReviewPageState extends State<ReviewPage> {
     return querySnapshot.docs;
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -91,7 +88,7 @@ class _ReviewPageState extends State<ReviewPage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: Text(
-              reviewData['buyerName'] ?? '', // Email of the buyer
+              reviewData['buyerName'] ?? '',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -109,7 +106,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   image: DecorationImage(
-                    image: NetworkImage(reviewData['image'] ?? ''), // Image URL
+                    image: NetworkImage(reviewData['image'] ?? ''),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -122,7 +119,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     children: [
                       const SizedBox(height: 20),
                       Text(
-                        reviewData['comment'] ?? '', // Comment
+                        reviewData['comment'] ?? '',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black,
@@ -130,7 +127,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        'Rate: ${reviewData['rate'] ?? ''}', // Rate
+                        'Rate: ${reviewData['rate'] ?? ''}',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black,

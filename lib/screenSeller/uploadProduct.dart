@@ -10,19 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-class uploadProductPage extends StatefulWidget {
+class UploadProductPage extends StatefulWidget {
   static const routeName = "/UploadProduct";
-  const uploadProductPage({super.key});
+  const UploadProductPage({super.key});
 
   @override
-  State<uploadProductPage> createState() => _uploadProductState();
+  State<UploadProductPage> createState() => _UploadProductState();
 }
 
 final dbEthriftRef = FirebaseDatabase.instance.ref("Products");
 final storageRef = FirebaseStorage.instance.ref().child('product_images');
 
-class _uploadProductState extends State<uploadProductPage> {
-  //text controllers
+class _UploadProductState extends State<UploadProductPage> {
   TextEditingController prodName = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController description = TextEditingController();
@@ -30,23 +29,16 @@ class _uploadProductState extends State<uploadProductPage> {
   bool isItemSaved = false;
 
   Future<void> addProduct() async {
-    // Get the selected image and convert it to a base64 string
     if (_selectedImage != null) {
       final imageBytes = File(_selectedImage!.path).readAsBytesSync();
-      // Generate a new unique ID for the product
       String productId = dbEthriftRef.push().key ?? '';
-
-      // Upload the image to Firebase Storage
       String imageUrl = await uploadImageToStorage(imageBytes, productId);
-
-      // Get the current user
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
         String userId = user.uid;
 
         try {
-          // Save the product data to Firestore under the user's ID
           await FirebaseFirestore.instance
               .collection('Users')
               .doc(userId)
@@ -59,43 +51,33 @@ class _uploadProductState extends State<uploadProductPage> {
             "description": description.text,
             "image": imageUrl,
           });
-
-          // Save the product data to Firestore under the category
           await FirebaseFirestore.instance
               .collection('Category Products')
               .doc(selectedValue)
-              .collection('Product ID') // Store under the current user's ID
+              .collection('Product ID')
               .doc(productId)
               .set({
             "name": prodName.text,
             "price": double.parse(price.text),
-            // You can add other fields here if needed
           });
-
-          // Clear the text fields and reset the selected image
           prodName.clear();
           price.clear();
           description.clear();
           setState(() {
             _selectedImage = null;
           });
-
-          // Show a success message
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Produk berjaya ditambah.')),
           );
         } catch (error) {
-          // Handle Firestore error
           print('Gagal untuk menambah produk: $error');
         }
       } else {
-        // Show an error message if user is null
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User is not authenticated')),
         );
       }
     } else {
-      // Show an error message if no image is selected
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Sila pilih satu gambar')),
       );
@@ -110,24 +92,18 @@ class _uploadProductState extends State<uploadProductPage> {
     super.dispose();
   }
 
-  //final fbEthrift = FirebaseDatabase.instance;
-
   final List<String> categories = [
     "Fesyen Wanita",
     "Fesyen Lelaki",
     "Alat Solek",
     "Komputer Teknologi",
-  ]; // Example categories
-
-  //String dropdownValue = "Select Category"; // Default category
+  ];
   String? selectedValue;
 
   File? _selectedImage;
 
   @override
   Widget build(BuildContext context) {
-    //final ref = fbEthrift.ref().child('Products');
-
     return Scaffold(
       body: Form(
         child: Center(
@@ -135,17 +111,14 @@ class _uploadProductState extends State<uploadProductPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //    _selectedImage != null ? Image.file(_selectedImage!) : const Text("Please select an image"),
                 _selectedImage != null
-                    ? Container(
-                        width: 350, // Adjust width as needed
-                        height: 300, // Adjust height as needed
+                    ? SizedBox(
+                        width: 350,
+                        height: 300,
                         child: Image.file(_selectedImage!),
                       )
                     : const Text("Sila pilih satu gambar."),
-
-                //button add image
-                Container(
+                SizedBox(
                   width: 50,
                   child: MaterialButton(
                     elevation: 0.0,
@@ -158,29 +131,17 @@ class _uploadProductState extends State<uploadProductPage> {
                     },
                   ),
                 ),
-                //  const SizedBox(height: 10),
-
                 const SizedBox(height: 40),
-
-                //textfield product Name
                 buildProductName(),
                 const SizedBox(height: 10),
-
-                //textfield product price
                 buildProductPrice(),
                 const SizedBox(height: 10),
-
-                //dropdown product category
                 buildProductCategory(),
                 const SizedBox(height: 10),
-
-                //textfield description
                 buildProductDesc(),
                 const SizedBox(height: 40),
-
-                //button add product
                 const SizedBox(height: 40),
-                Container(
+                SizedBox(
                   width: 200,
                   child: RawMaterialButton(
                     fillColor: const Color.fromARGB(255, 101, 13, 6),
@@ -212,10 +173,9 @@ class _uploadProductState extends State<uploadProductPage> {
     );
   }
 
-  //product Name
   SizedBox buildProductName() {
     return SizedBox(
-      width: 400, // Adjust the width as needed
+      width: 400,
       child: TextFormField(
         controller: prodName,
         keyboardType: TextInputType.text,
@@ -223,11 +183,9 @@ class _uploadProductState extends State<uploadProductPage> {
           labelText: 'Product Name',
           hintText: 'Fill your product name here.',
           labelStyle: const TextStyle(color: Colors.black),
-          //prefixIcon: Icon(Icons.person, color: Colors.black),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          // You can add more styling here if needed
         ),
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -236,10 +194,9 @@ class _uploadProductState extends State<uploadProductPage> {
     );
   }
 
-  //product Price
   SizedBox buildProductPrice() {
     return SizedBox(
-      width: 400, // Adjust the width as needed
+      width: 400,
       child: TextFormField(
         controller: price,
         keyboardType: TextInputType.text,
@@ -247,11 +204,9 @@ class _uploadProductState extends State<uploadProductPage> {
           labelText: 'Price',
           hintText: 'Fill your product price here.',
           labelStyle: const TextStyle(color: Colors.black),
-          //prefixIcon: Icon(Icons.person, color: Colors.black),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          // You can add more styling here if needed
         ),
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -260,7 +215,6 @@ class _uploadProductState extends State<uploadProductPage> {
     );
   }
 
-  //product Category
   SizedBox buildProductCategory() {
     return SizedBox(
       width: 400,
@@ -293,9 +247,7 @@ class _uploadProductState extends State<uploadProductPage> {
           }
           return null;
         },
-        onChanged: (value) {
-          //Do something when selected item is changed.
-        },
+        onChanged: (value) {},
         onSaved: (value) {
           selectedValue = value.toString();
         },
@@ -321,10 +273,9 @@ class _uploadProductState extends State<uploadProductPage> {
     );
   }
 
-  //description
   SizedBox buildProductDesc() {
     return SizedBox(
-      width: 400, // Adjust the width as needed
+      width: 400,
       child: TextFormField(
         controller: description,
         keyboardType: TextInputType.text,
@@ -332,11 +283,9 @@ class _uploadProductState extends State<uploadProductPage> {
           labelText: 'Description',
           hintText: 'Fill your description here.',
           labelStyle: const TextStyle(color: Colors.black),
-          //prefixIcon: Icon(Icons.person, color: Colors.black),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          // You can add more styling here if needed
         ),
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -345,7 +294,6 @@ class _uploadProductState extends State<uploadProductPage> {
     );
   }
 
-  //pick image from gallery
   Future _pickImagefromGallery() async {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -356,24 +304,18 @@ class _uploadProductState extends State<uploadProductPage> {
     });
   }
 
-  //upload image to firebase storage
   uploadImageToStorage(Uint8List imageBytes, String productId) async {
     try {
-      // Create a reference to the location where you want to store the image
       Reference storageRef =
           FirebaseStorage.instance.ref().child('product_images/$productId.jpg');
-
-      // Upload the image to Firebase Storage
       UploadTask uploadTask = storageRef.putData(imageBytes);
-
-      // Await the completion of the upload task and get the download URL
       TaskSnapshot snapshot = await uploadTask;
       String imageUrl = await snapshot.ref.getDownloadURL();
 
       return imageUrl;
     } catch (e) {
       print('Error uploading image to storage: $e');
-      return ''; // Return empty string in case of error
+      return '';
     }
   }
 }

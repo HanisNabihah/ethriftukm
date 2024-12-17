@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,7 +11,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 class UploadProductFirestorePage extends StatefulWidget {
   static const routeName = "/UploadProduct";
-  const UploadProductFirestorePage({Key? key});
+  const UploadProductFirestorePage({superKey}) : super(key: superKey);
 
   @override
   State<UploadProductFirestorePage> createState() =>
@@ -27,7 +25,6 @@ final Reference storageRef =
 
 class _UploadProductFirestorePageState
     extends State<UploadProductFirestorePage> {
-  // Text controllers
   TextEditingController prodName = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController description = TextEditingController();
@@ -39,7 +36,7 @@ class _UploadProductFirestorePageState
     "Men's Fashion",
     "Beauty & Personal Care",
     "Computer Tech",
-  ]; // Example categories
+  ];
 
   String? selectedValue;
 
@@ -49,7 +46,6 @@ class _UploadProductFirestorePageState
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -65,7 +61,7 @@ class _UploadProductFirestorePageState
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _selectedImage != null
-                    ? Container(
+                    ? SizedBox(
                         width: 250,
                         height: 200,
                         child: Image.file(
@@ -74,9 +70,7 @@ class _UploadProductFirestorePageState
                         ),
                       )
                     : const Text("Pilih satu gambar"),
-
-                // Button to add image
-                Container(
+                SizedBox(
                   width: 50,
                   child: MaterialButton(
                     elevation: 0.0,
@@ -90,26 +84,15 @@ class _UploadProductFirestorePageState
                   ),
                 ),
                 const SizedBox(height: 40),
-
-                // Textfield product Name
                 buildProductName(),
                 const SizedBox(height: 10),
-
-                // Textfield product price
                 buildProductPrice(),
                 const SizedBox(height: 10),
-
-                // Dropdown product category
                 buildProductCategory(),
                 const SizedBox(height: 10),
-
-                // Textfield description
                 buildProductDesc(),
-                //const SizedBox(height: 50),
-
-                // Button add product
                 const SizedBox(height: 40),
-                Container(
+                SizedBox(
                   width: 280,
                   child: RawMaterialButton(
                     fillColor: const Color.fromARGB(255, 101, 13, 6),
@@ -141,7 +124,6 @@ class _UploadProductFirestorePageState
     );
   }
 
-  // Product Name
   SizedBox buildProductName() {
     return SizedBox(
       width: 350,
@@ -163,7 +145,6 @@ class _UploadProductFirestorePageState
     );
   }
 
-  // Product Price
   SizedBox buildProductPrice() {
     return SizedBox(
       width: 350,
@@ -185,7 +166,6 @@ class _UploadProductFirestorePageState
     );
   }
 
-  // Product Category
   SizedBox buildProductCategory() {
     return SizedBox(
       width: 350,
@@ -219,9 +199,8 @@ class _UploadProductFirestorePageState
           return null;
         },
         onChanged: (value) {
-          // Do something when selected item is changed.
           setState(() {
-            selectedValue = value; // Update the selectedValue
+            selectedValue = value;
           });
         },
         onSaved: (value) {
@@ -249,7 +228,6 @@ class _UploadProductFirestorePageState
     );
   }
 
-  // Description
   SizedBox buildProductDesc() {
     return SizedBox(
       width: 350,
@@ -273,7 +251,6 @@ class _UploadProductFirestorePageState
     );
   }
 
-  // Pick image from gallery
   Future _pickImageFromGallery() async {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -284,57 +261,44 @@ class _UploadProductFirestorePageState
     });
   }
 
-  // Add product
   Future<void> addProduct() async {
     if (_selectedImage != null) {
       final imageBytes = await _selectedImage!.readAsBytes();
 
-      //get the current User ID and Username
       String userID = FirebaseAuth.instance.currentUser!.uid;
 
-      // Fetch the user document from Firestore
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
           .collection('Users')
           .doc(userID)
           .get();
-      // Get the username from the user document
       String username = userSnapshot['username'];
       String userEmail = userSnapshot['email'];
 
-      // Generate a unique product ID
       String productId = dbEthriftRef.doc().id;
-
-      // Upload image to Firebase Storage and get the download URL
-      //String imageUrl = await uploadImageToStorage(imageBytes, productId);
-      // Upload image to Firebase Storage and get the download URL
       String imageUrl = await uploadImageToStorage(imageBytes, productId);
       if (imageUrl.isEmpty) {
-        // Image upload failed
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Error uploading image')),
         );
         return;
       }
 
-      // Reference to the document where the product data will be stored
       DocumentReference productRef =
           dbEthriftRef.doc(userID).collection('Products').doc(productId);
 
-      //Store product details under the selected category
       DocumentReference categoryRef = FirebaseFirestore.instance
           .collection('Category Products')
           .doc(selectedValue)
           .collection('Products')
           .doc(productId);
 
-      // Set availability to "available"
       String availability = "available";
 
       await productRef.set({
         "userEmail": userEmail,
         "userId": userID,
         "username": username,
-        "name": prodName.text, // Include the user ID in the document data
+        "name": prodName.text,
         "price": double.parse(price.text),
         "category": selectedValue,
         "description": description.text,
@@ -343,12 +307,11 @@ class _UploadProductFirestorePageState
         "productId": productId,
       });
 
-      // Store product details in the "Products" collection
       await productRef.set({
         "userEmail": userEmail,
         "userId": userID,
         "username": username,
-        "name": prodName.text, // Include the user ID in the document data
+        "name": prodName.text,
         "price": double.parse(price.text),
         "category": selectedValue,
         "description": description.text,
@@ -357,7 +320,6 @@ class _UploadProductFirestorePageState
         "productId": productId,
       });
 
-      // Store product details in the "AllProducts" collection
       await FirebaseFirestore.instance
           .collection('AllProducts')
           .doc(productId)
@@ -373,8 +335,6 @@ class _UploadProductFirestorePageState
         "availability": availability,
         "productId": productId,
       });
-
-      // Store product name and price under the selected category
       await categoryRef.set({
         "userEmail": userEmail,
         "userId": userID,
@@ -397,8 +357,6 @@ class _UploadProductFirestorePageState
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Produk berjaya ditambah.')),
       );
-
-      // Navigate back to the main menu page
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -407,21 +365,6 @@ class _UploadProductFirestorePageState
     }
   }
 
-  // Upload image to Firestore Storage
-  // Future<String> uploadImageToStorage(
-  //     Uint8List imageBytes, String productId) async {
-  //   try {
-  //     Reference storageReference = storageRef.child('$productId.jpg');
-  //     UploadTask uploadTask = storageReference.putData(imageBytes);
-  //     TaskSnapshot snapshot = await uploadTask;
-  //     String imageUrl = await snapshot.ref.getDownloadURL();
-
-  //     return imageUrl;
-  //   } catch (e) {
-  //     print('Error uploading image to storage: $e');
-  //     return '';
-  //   }
-  // }
   Future<String> uploadImageToStorage(
       Uint8List imageBytes, String productId) async {
     try {

@@ -13,7 +13,7 @@ class ReviewSubmitPage extends StatefulWidget {
   const ReviewSubmitPage({
     Key? key,
     required this.historyData,
-    required this.onReviewSubmitted, // Initialize the callback
+    required this.onReviewSubmitted,
   }) : super(key: key);
 
   @override
@@ -25,12 +25,12 @@ class _ReviewSubmitPageState extends State<ReviewSubmitPage> {
   final TextEditingController _commentController = TextEditingController();
   double _rating = 0;
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -44,12 +44,10 @@ class _ReviewSubmitPageState extends State<ReviewSubmitPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-
             Center(
-              // Center widget added here
               child: Padding(
                 padding: const EdgeInsets.all(0.0),
-                child: Container(
+                child: SizedBox(
                   width: 300,
                   height: 300,
                   child: Image.network(
@@ -59,10 +57,7 @@ class _ReviewSubmitPageState extends State<ReviewSubmitPage> {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
-            //rating bar
             RatingBar.builder(
               initialRating: 0,
               minRating: 0.5,
@@ -103,12 +98,10 @@ class _ReviewSubmitPageState extends State<ReviewSubmitPage> {
               },
               onRatingUpdate: (rating) {
                 setState(() {
-                  _rating = rating; // Store the rating value
+                  _rating = rating;
                 });
               },
             ),
-
-            //tempat komen
             const SizedBox(height: 10),
             SizedBox(
               width: 350,
@@ -132,10 +125,8 @@ class _ReviewSubmitPageState extends State<ReviewSubmitPage> {
                 maxLines: 10,
               ),
             ),
-
-            //button submit review
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               width: 300,
               child: RawMaterialButton(
                 fillColor: const Color.fromARGB(255, 101, 13, 6),
@@ -165,57 +156,37 @@ class _ReviewSubmitPageState extends State<ReviewSubmitPage> {
     );
   }
 
-  // Function to submit the review
   Future<void> submitReview() async {
-    // Get the current user ID
     String buyerID = FirebaseAuth.instance.currentUser!.uid;
-
-    // Fetch the sellerID from the 'Sales' collection based on the product being reviewed
     String sellerID = widget.historyData['sellerId'];
-
-    // Create a new document in the "Reviews" collection with a unique ID
     DocumentReference reviewRef = FirebaseFirestore.instance
         .collection('Reviews')
         .doc(sellerID)
         .collection('reviewsDetails')
         .doc();
-
-    // Prepare the review data to be stored
     Map<String, dynamic> reviewData = {
       'productName': widget.historyData['productName'],
       'image': widget.historyData['image'],
       'price': widget.historyData['productPrice'],
       'buyerName': widget.historyData['buyerName'],
       'emailBuyer': FirebaseAuth.instance.currentUser!.email,
-      'comment': _commentController
-          .text, // Assuming _commentController is the controller for the review text field
-      'rate':
-          _rating, // Assuming _rating is the variable storing the rating value
+      'comment': _commentController.text,
+      'rate': _rating,
       'orderId': widget.historyData['orderId'],
     };
-
-    //update kat history details
-    // Update the review status in the History collection
     DocumentReference historyRef = FirebaseFirestore.instance
         .collection('History')
         .doc(buyerID)
         .collection('HistoryDetails')
-        .doc(widget.historyData['orderId']); // Assuming 'id' is the document ID
+        .doc(widget.historyData['orderId']);
 
     await historyRef.update({'statusReview': "submitted"});
-
-    // Save the review data to Firestore
     await reviewRef.set(reviewData);
-
     widget.onReviewSubmitted();
-
-    // Show toast message
     Fluttertoast.showToast(
       msg: "Komen Berjaya Dihantar",
       toastLength: Toast.LENGTH_SHORT,
     );
-
-    // Navigate back to the main menu
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const MainMenuPage()),

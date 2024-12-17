@@ -16,11 +16,8 @@ class LoginPage extends StatefulWidget {
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 class _LoginPageState extends State<LoginPage> {
-  // Text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  // Track whether the password is obscured or not
   bool _isObscured = true;
 
   Future<void> signIn() async {
@@ -31,23 +28,12 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
 
-      // Check if email is verified
       if (userCredential.user != null && userCredential.user!.emailVerified) {
         String uid = userCredential.user!.uid;
-
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: Text('Log Masuk Berjaya'),
-        //   ),
-        // );
-
-        // Check if the user is in the Users collection
         DocumentSnapshot userData =
             await FirebaseFirestore.instance.collection('Users').doc(uid).get();
 
         if (userData.exists) {
-          // User is in the Users collection
-
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Log Masuk Berjaya'),
@@ -59,20 +45,17 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(builder: (context) => const MainMenuPage()),
           );
         } else {
-          // Check if the user is in the Admin collection
           DocumentSnapshot adminData = await FirebaseFirestore.instance
               .collection('Admin')
               .doc(uid)
               .get();
 
           if (adminData.exists) {
-            // User is in the Admin collection
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const homepageAdmin()),
+              MaterialPageRoute(builder: (context) => const HomepageAdmin()),
             );
           } else {
-            // User does not exist in either collection
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Pengguna tidak wujud dalam mana-mana koleksi'),
@@ -81,7 +64,6 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
       } else {
-        // Resend email verification if user's email is not verified
         await userCredential.user!.sendEmailVerification();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -122,7 +104,6 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo
                 Padding(
                   padding: const EdgeInsets.all(0.0),
                   child: Image.asset(
@@ -130,18 +111,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Textfield Email
                 buildEmail(),
                 const SizedBox(height: 10),
-                // Textfield Password
                 buildPassword(),
                 const SizedBox(height: 26),
-                // TextButton Forgot Password
                 Padding(
                   padding: const EdgeInsets.only(right: 25.0),
                   child: GestureDetector(
                     onTap: () {
-                      // Navigate to the reset password UI
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -161,8 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Button login
-                Container(
+                SizedBox(
                   width: 280,
                   child: RawMaterialButton(
                     fillColor: const Color.fromARGB(255, 101, 13, 6),
@@ -199,12 +175,11 @@ class _LoginPageState extends State<LoginPage> {
                       width: 300,
                       child: Text(
                         'Daftar Sekarang!',
-                        textAlign:
-                            TextAlign.center, // Center the text horizontally
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 17,
                           decoration: TextDecoration.underline,
-                          color: Colors.purple, // Change color as needed
+                          color: Colors.purple,
                         ),
                       ),
                     ),
@@ -218,7 +193,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Email
   SizedBox buildEmail() {
     return SizedBox(
       width: 350,
@@ -244,7 +218,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Password
   SizedBox buildPassword() {
     return SizedBox(
       width: 350,

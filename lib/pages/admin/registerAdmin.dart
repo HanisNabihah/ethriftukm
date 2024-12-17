@@ -3,15 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ethriftukm_fyp/pages/admin/homepageAdmin.dart';
 
-class registerAdminPage extends StatefulWidget {
+class RegisterAdminPage extends StatefulWidget {
   static const routeName = "/registerAdminPage";
-  const registerAdminPage({Key? key}) : super(key: key);
+  const RegisterAdminPage({Key? key}) : super(key: key);
 
   @override
-  _registerAdminPageState createState() => _registerAdminPageState();
+  _RegisterAdminPageState createState() => _RegisterAdminPageState();
 }
 
-class _registerAdminPageState extends State<registerAdminPage> {
+class _RegisterAdminPageState extends State<RegisterAdminPage> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -27,7 +27,6 @@ class _registerAdminPageState extends State<registerAdminPage> {
     super.dispose();
   }
 
-  //authenticate user
   Future<void> register() async {
     String username = _usernameController.text.trim();
     String email = _emailController.text.trim();
@@ -36,22 +35,17 @@ class _registerAdminPageState extends State<registerAdminPage> {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-
-      // After successful registration, store additional user data in Firestore
       CollectionReference admin =
           FirebaseFirestore.instance.collection('Admin');
       await admin.doc(userCredential.user!.uid).set({
         'username': username,
         'email': email,
       });
-
-      // Navigate to login page after successful registration
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const homepageAdmin()),
+        MaterialPageRoute(builder: (context) => const HomepageAdmin()),
       );
     } catch (error) {
-      // Handle registration errors
       print('Failed to register: $error');
     }
   }
@@ -74,7 +68,6 @@ class _registerAdminPageState extends State<registerAdminPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Title
               const Text(
                 'Register Admin',
                 style: TextStyle(
@@ -83,9 +76,7 @@ class _registerAdminPageState extends State<registerAdminPage> {
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 20), // Adjust spacing as needed
-
-              //logo
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: Image.asset(
@@ -93,24 +84,15 @@ class _registerAdminPageState extends State<registerAdminPage> {
                   height: 300,
                 ),
               ),
-
-              //username
               buildUsername(),
               const SizedBox(height: 10),
-
-              //textfield Email
               buildEmail(),
               const SizedBox(height: 10),
-
-              //Textfield Password
               buildPassword(),
               const SizedBox(height: 10),
-
               buildConfirmPassword(),
               const SizedBox(height: 26),
-
-              //button register
-              Container(
+              SizedBox(
                 width: 300,
                 child: RawMaterialButton(
                   fillColor: const Color.fromARGB(255, 101, 13, 6),
@@ -134,7 +116,6 @@ class _registerAdminPageState extends State<registerAdminPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 24),
             ],
           ),
@@ -143,10 +124,9 @@ class _registerAdminPageState extends State<registerAdminPage> {
     );
   }
 
-  // UserName
   SizedBox buildUsername() {
     return SizedBox(
-      width: 400, // Adjust the width as needed
+      width: 400,
       child: TextFormField(
         controller: _usernameController,
         keyboardType: TextInputType.text,
@@ -158,7 +138,6 @@ class _registerAdminPageState extends State<registerAdminPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          // You can add more styling here if needed
         ),
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -167,10 +146,9 @@ class _registerAdminPageState extends State<registerAdminPage> {
     );
   }
 
-  // Email
   SizedBox buildEmail() {
     return SizedBox(
-      width: 400, // Adjust the width as needed
+      width: 400,
       child: TextFormField(
         controller: _emailController,
         keyboardType: TextInputType.text,
@@ -182,7 +160,6 @@ class _registerAdminPageState extends State<registerAdminPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          // You can add more styling here if needed
         ),
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -191,7 +168,6 @@ class _registerAdminPageState extends State<registerAdminPage> {
     );
   }
 
-  // password
   SizedBox buildPassword() {
     return SizedBox(
         width: 400,
@@ -203,9 +179,7 @@ class _registerAdminPageState extends State<registerAdminPage> {
             labelText: 'Password',
             hintText: 'Enter your password.',
             labelStyle: const TextStyle(color: Colors.black),
-            //floatingLabelBehavior: FloaticonsingLabelBehavior.always,
             prefixIcon: const Icon(Icons.lock, color: Colors.black),
-
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -216,7 +190,6 @@ class _registerAdminPageState extends State<registerAdminPage> {
         ));
   }
 
-  //confirmed password
   SizedBox buildConfirmPassword() {
     return SizedBox(
         width: 400,
@@ -228,9 +201,7 @@ class _registerAdminPageState extends State<registerAdminPage> {
             labelText: 'Confirm Password',
             hintText: 'Confirm your password.',
             labelStyle: const TextStyle(color: Colors.black),
-            //floatingLabelBehavior: FloaticonsingLabelBehavior.always,
             prefixIcon: const Icon(Icons.lock, color: Colors.black),
-
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),

@@ -1,23 +1,19 @@
-//page untuk design kotak for history
-//tak jadi lagi
-
 import 'package:flutter/material.dart';
 
-class historyWidgetPage extends StatefulWidget {
-  const historyWidgetPage({super.key});
+class HistoryWidgetPage extends StatefulWidget {
+  const HistoryWidgetPage({super.key});
 
   @override
-  State<historyWidgetPage> createState() => _historyWidgetPageState();
+  State<HistoryWidgetPage> createState() => _HistoryWidgetPageState();
 }
 
-class _historyWidgetPageState extends State<historyWidgetPage> {
+class _HistoryWidgetPageState extends State<HistoryWidgetPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -69,8 +65,7 @@ class _historyWidgetPageState extends State<historyWidgetPage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           image: const DecorationImage(
-                            image: AssetImage(
-                                'lib/images/nana.png'), // Use the passed image URL here
+                            image: AssetImage('lib/images/nana.png'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -81,7 +76,6 @@ class _historyWidgetPageState extends State<historyWidgetPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              //date Time
                               const SizedBox(height: 20),
                               const Text(
                                 'Date Time',
@@ -90,8 +84,6 @@ class _historyWidgetPageState extends State<historyWidgetPage> {
                                   color: Colors.black,
                                 ),
                               ),
-
-                              //Product Name
                               const SizedBox(height: 10),
                               const Text(
                                 'productName',
@@ -100,8 +92,6 @@ class _historyWidgetPageState extends State<historyWidgetPage> {
                                   color: Colors.black,
                                 ),
                               ),
-
-                              //Product Price
                               const SizedBox(height: 10),
                               const Text(
                                 'product Price',
@@ -110,14 +100,10 @@ class _historyWidgetPageState extends State<historyWidgetPage> {
                                   color: Colors.black,
                                 ),
                               ),
-
-                              //Button Rate
-                              //Button Rate
                               SizedBox(
                                 width: double.infinity,
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.end, // Align to the end
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     RawMaterialButton(
                                       fillColor:
@@ -128,13 +114,10 @@ class _historyWidgetPageState extends State<historyWidgetPage> {
                                         borderRadius:
                                             BorderRadius.circular(150),
                                       ),
-                                      onPressed: () {
-                                        // Handle button press
-                                      },
+                                      onPressed: () {},
                                       child: const Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 8), // Add padding here
+                                            horizontal: 16, vertical: 8),
                                         child: Text(
                                           "RATE",
                                           style: TextStyle(

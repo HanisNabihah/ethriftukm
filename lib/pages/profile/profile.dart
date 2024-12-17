@@ -97,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage>
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => crudProductPage(
+          builder: (context) => CrudProductPage(
             productId: product.id,
             imageUrl: productData['image'],
             productName: productData['name'],
@@ -125,8 +125,9 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
+  @override
   Widget build(BuildContext context) {
-    TabController _tabController = TabController(length: 2, vsync: this);
+    TabController tabController = TabController(length: 2, vsync: this);
 
     return Scaffold(
       appBar: AppBar(
@@ -229,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage>
                         child: TabBar(
                             labelPadding:
                                 const EdgeInsets.only(left: 30, right: 80),
-                            controller: _tabController,
+                            controller: tabController,
                             labelColor: Colors.black,
                             unselectedLabelColor: Colors.grey,
                             isScrollable: true,
@@ -245,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage>
                     Container(
                       height: 500,
                       child: TabBarView(
-                        controller: _tabController,
+                        controller: tabController,
                         children: [
                           FutureBuilder<List<DocumentSnapshot>>(
                             future: _productsFuture,
@@ -345,314 +346,289 @@ class _ProfilePageState extends State<ProfilePage>
                               }
                             },
                           ),
-
-                          Container(
-                            child: FutureBuilder<List<DocumentSnapshot>>(
-                                future: _fetchOrders(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
+                          FutureBuilder<List<DocumentSnapshot>>(
+                              future: _fetchOrders(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                      child: Text('Error: ${snapshot.error}'));
+                                } else {
+                                  List<DocumentSnapshot> orders =
+                                      snapshot.data ?? [];
+                                  if (orders.isEmpty) {
                                     return const Center(
-                                        child: CircularProgressIndicator());
-                                  } else if (snapshot.hasError) {
-                                    return Center(
-                                        child:
-                                            Text('Error: ${snapshot.error}'));
+                                        child: Text('Tiada Jualan Dijumpai'));
                                   } else {
-                                    List<DocumentSnapshot> orders =
-                                        snapshot.data ?? [];
-                                    if (orders.isEmpty) {
-                                      return const Center(
-                                          child: Text('Tiada Jualan Dijumpai'));
-                                    } else {
-                                      return ListView.builder(
-                                          itemCount: orders.length,
-                                          itemBuilder: (context, index) {
-                                            Map<String, dynamic> orderData =
-                                                orders[index].data()
-                                                    as Map<String, dynamic>;
+                                    return ListView.builder(
+                                        itemCount: orders.length,
+                                        itemBuilder: (context, index) {
+                                          Map<String, dynamic> orderData =
+                                              orders[index].data()
+                                                  as Map<String, dynamic>;
 
-                                            String orderId =
-                                                orderData['orderId'];
-                                            _isOrderAccepted.putIfAbsent(
-                                                orderId,
-                                                () =>
-                                                    orderData['status'] ==
-                                                    'accepted');
+                                          String orderId = orderData['orderId'];
+                                          _isOrderAccepted.putIfAbsent(
+                                              orderId,
+                                              () =>
+                                                  orderData['status'] ==
+                                                  'accepted');
 
-                                            _isOrderRejected.putIfAbsent(
-                                                orderId,
-                                                () =>
-                                                    orderData['status'] ==
-                                                    'rejected');
+                                          _isOrderRejected.putIfAbsent(
+                                              orderId,
+                                              () =>
+                                                  orderData['status'] ==
+                                                  'rejected');
 
-                                            return Container(
-                                              margin:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 15),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    color: Colors.black12,
-                                                    blurRadius: 10,
-                                                    spreadRadius: 2,
-                                                    offset: Offset(0, 4),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  const Padding(
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            20, 10, 20, 10),
-                                                    child: Text(
-                                                      'Maklumat Pesanan',
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
+                                          return Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 15),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 10,
+                                                  spreadRadius: 2,
+                                                  offset: Offset(0, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      20, 10, 20, 10),
+                                                  child: Text(
+                                                    'Maklumat Pesanan',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
                                                     ),
                                                   ),
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        width: 120,
-                                                        height: 120,
-                                                        margin: const EdgeInsets
-                                                            .only(
-                                                            top: 12,
-                                                            left: 20,
-                                                            bottom: 12),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5),
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                                orderData[
-                                                                    'image']),
-                                                            fit: BoxFit.cover,
-                                                          ),
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      width: 120,
+                                                      height: 120,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 12,
+                                                              left: 20,
+                                                              bottom: 12),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              orderData[
+                                                                  'image']),
+                                                          fit: BoxFit.cover,
                                                         ),
                                                       ),
-                                                      Expanded(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .fromLTRB(20,
-                                                                  0, 20, 10),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const SizedBox(
-                                                                  height: 20),
-                                                              Text(
-                                                                orderData[
-                                                                    'currentDate'],
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .fromLTRB(
+                                                                20, 0, 20, 10),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            const SizedBox(
+                                                                height: 20),
+                                                            Text(
+                                                              orderData[
+                                                                  'currentDate'],
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black,
                                                               ),
-                                                              Text(
-                                                                orderData[
-                                                                    'currentTime'],
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
+                                                            ),
+                                                            Text(
+                                                              orderData[
+                                                                  'currentTime'],
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black,
                                                               ),
-
-                                                              const SizedBox(
-                                                                  height: 10),
-                                                              Text(
-                                                                orderData[
-                                                                        'productName'] ??
-                                                                    '',
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 10),
+                                                            Text(
+                                                              orderData[
+                                                                      'productName'] ??
+                                                                  '',
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black,
                                                               ),
-                                                              const SizedBox(
-                                                                  height: 10),
-                                                              Text(
-                                                                "RM ${orderData['productPrice'] ?? ''}",
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 10),
+                                                            Text(
+                                                              "RM ${orderData['productPrice'] ?? ''}",
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black,
                                                               ),
-
-                                                              //button accept and reject
-                                                              SizedBox(
-                                                                width: double
-                                                                    .infinity,
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    // ACCEPT button
-                                                                    // if (!_isOrderAccepted[
-                                                                    //         orderId]! &&
-                                                                    //     !_isOrderRejected[
-                                                                    //         orderId]!)
-                                                                    if (orderData['status'] !=
-                                                                            'accepted' &&
-                                                                        orderData['status'] !=
-                                                                            'rejected')
-                                                                      RawMaterialButton(
-                                                                        fillColor:
-                                                                            Colors.lightBlueAccent,
-                                                                        elevation:
-                                                                            0.0,
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            0),
-                                                                        shape:
-                                                                            RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(150),
+                                                            ),
+                                                            SizedBox(
+                                                              width: double
+                                                                  .infinity,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  if (orderData[
+                                                                              'status'] !=
+                                                                          'accepted' &&
+                                                                      orderData[
+                                                                              'status'] !=
+                                                                          'rejected')
+                                                                    RawMaterialButton(
+                                                                      fillColor:
+                                                                          Colors
+                                                                              .lightBlueAccent,
+                                                                      elevation:
+                                                                          0.0,
+                                                                      padding:
+                                                                          const EdgeInsets
+                                                                              .all(
+                                                                              0),
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(150),
+                                                                      ),
+                                                                      onPressed:
+                                                                          () async {
+                                                                        onAcceptOrder(
+                                                                            orderData);
+                                                                        onAcceptOrder(
+                                                                            orderData);
+                                                                        await _setOrderState(
+                                                                            orderId,
+                                                                            true);
+                                                                      },
+                                                                      child:
+                                                                          const Padding(
+                                                                        padding:
+                                                                            EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              16,
+                                                                          vertical:
+                                                                              8,
                                                                         ),
-                                                                        //pressed the ACCEPT function
-                                                                        onPressed:
-                                                                            () async {
-                                                                          onAcceptOrder(
-                                                                              orderData);
-                                                                          onAcceptOrder(
-                                                                              orderData);
-                                                                          await _setOrderState(
-                                                                              orderId,
-                                                                              true);
-                                                                          // setState(
-                                                                          //     () {
-                                                                          //    _isOrderAccepted[orderId] =
-                                                                          //       true;
-                                                                          // });
-                                                                        },
                                                                         child:
-                                                                            const Padding(
-                                                                          padding:
-                                                                              EdgeInsets.symmetric(
-                                                                            horizontal:
-                                                                                16,
-                                                                            vertical:
-                                                                                8,
-                                                                          ),
-                                                                          child:
-                                                                              Text(
-                                                                            "ACCEPT",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontSize: 14,
-                                                                            ),
+                                                                            Text(
+                                                                          "ACCEPT",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontSize:
+                                                                                14,
                                                                           ),
                                                                         ),
                                                                       ),
-
-                                                                    //for reject function
-                                                                    // if (!_isOrderAccepted[
-                                                                    //         orderId]! &&
-                                                                    //     !_isOrderRejected[
-                                                                    //         orderId]!)
-                                                                    if (orderData['status'] !=
-                                                                            'accepted' &&
-                                                                        orderData['status'] !=
-                                                                            'rejected')
-                                                                      RawMaterialButton(
-                                                                        fillColor:
-                                                                            Colors.red,
-                                                                        elevation:
-                                                                            0.0,
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            0),
-                                                                        shape:
-                                                                            RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(150),
+                                                                    ),
+                                                                  if (orderData[
+                                                                              'status'] !=
+                                                                          'accepted' &&
+                                                                      orderData[
+                                                                              'status'] !=
+                                                                          'rejected')
+                                                                    RawMaterialButton(
+                                                                      fillColor:
+                                                                          Colors
+                                                                              .red,
+                                                                      elevation:
+                                                                          0.0,
+                                                                      padding:
+                                                                          const EdgeInsets
+                                                                              .all(
+                                                                              0),
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(150),
+                                                                      ),
+                                                                      onPressed:
+                                                                          () async {
+                                                                        onRejectOrder(
+                                                                            orderData);
+                                                                        await _setOrderState(
+                                                                            orderId,
+                                                                            false);
+                                                                      },
+                                                                      child:
+                                                                          const Padding(
+                                                                        padding:
+                                                                            EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              16,
+                                                                          vertical:
+                                                                              8,
                                                                         ),
-                                                                        onPressed:
-                                                                            () async {
-                                                                          // Action for Reject button
-                                                                          onRejectOrder(
-                                                                              orderData);
-                                                                          await _setOrderState(
-                                                                              orderId,
-                                                                              false);
-                                                                          // setState(
-                                                                          //     () {
-                                                                          //   _isOrderRejected[orderId] =
-                                                                          //       true;
-                                                                          // });
-                                                                        },
                                                                         child:
-                                                                            const Padding(
-                                                                          padding:
-                                                                              EdgeInsets.symmetric(
-                                                                            horizontal:
-                                                                                16,
-                                                                            vertical:
-                                                                                8,
-                                                                          ),
-                                                                          child:
-                                                                              Text(
-                                                                            "REJECT",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontSize: 14,
-                                                                            ),
+                                                                            Text(
+                                                                          "REJECT",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontSize:
+                                                                                14,
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                  ],
-                                                                ),
+                                                                    ),
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          });
-                                    }
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        });
                                   }
-                                }),
-                          ),
-
-                          // Text("Income"),
+                                }
+                              }),
                         ],
                       ),
                     ),
@@ -666,16 +642,13 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  //pass the order details kat HISTORY, and ada status which is "ACCEPTED"
   Future<void> onAcceptOrder(Map<String, dynamic> orderData) async {
     String sellerID = FirebaseAuth.instance.currentUser!.uid;
 
-    //get the orderID from Sales
     String orderId = orderData['orderId'];
     String buyerId = orderData['buyerId'];
     String productId = orderData['productId'];
 
-    // Update the status of the order in the "Sales" collection to "ACCEPTED"
     await FirebaseFirestore.instance
         .collection('Sales')
         .doc(sellerID)
@@ -684,30 +657,23 @@ class _ProfilePageState extends State<ProfilePage>
         .update({
       'status': 'accepted',
     });
-
-    //update availabilty PRODUCTS to available
     await FirebaseFirestore.instance
         .collection('Products')
         .doc(sellerID)
         .collection('Products')
         .doc(productId)
         .update({"availability": "not available"});
-
-    //update availability kat ALLPRODUCTS to available
     await FirebaseFirestore.instance
         .collection('AllProducts')
         .doc(productId)
         .update({"availability": "not available"});
 
-    //kena update kat product also masukkan status
-    // Fetch the products for the current user
     await FirebaseFirestore.instance
         .collection('Products')
         .doc(sellerID)
         .collection('Products')
         .get();
 
-    // Get the order details
     DocumentSnapshot orderSnapshot = await FirebaseFirestore.instance
         .collection('Sales')
         .doc(sellerID)
@@ -715,7 +681,6 @@ class _ProfilePageState extends State<ProfilePage>
         .doc(orderId)
         .get();
 
-    // Add the "Status: Accepted" attribute and transfer to "HISTORY" collection
     await FirebaseFirestore.instance
         .collection('History')
         .doc(buyerId)
@@ -738,57 +703,37 @@ class _ProfilePageState extends State<ProfilePage>
       "orderId": orderId,
       "statusReview": "Not Review",
     });
-
-    // Navigate to login page after successful registration
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => ProfilePage()),
-    // );
   }
 
-  //REJECTED
-  //pass the order details kat HISTORY, and ada status which is "rejected"
   Future<void> onRejectOrder(Map<String, dynamic> orderData) async {
     String sellerID = FirebaseAuth.instance.currentUser!.uid;
 
-    //get the orderID from Sales
     String orderId = orderData['orderId'];
     String buyerId = orderData['buyerId'];
     String productId = orderData['productId'];
 
-    //fetch productID
-
-    // Update the status of the order in the "Sales" collection to "rejected"
     await FirebaseFirestore.instance
         .collection('Sales')
         .doc(sellerID)
         .collection('Orders')
         .doc(orderId)
         .update({'status': 'rejected'});
-
-    // Get the order details
     DocumentSnapshot orderSnapshot = await FirebaseFirestore.instance
         .collection('Sales')
         .doc(sellerID)
         .collection('Orders')
         .doc(orderId)
         .get();
-
-    //update availabilty PRODUCTS to available
     await FirebaseFirestore.instance
         .collection('Products')
         .doc(sellerID)
         .collection('Products')
         .doc(productId)
         .update({"availability": "available"});
-
-    //update availability kat ALLPRODUCTS to available
     await FirebaseFirestore.instance
         .collection('AllProducts')
         .doc(productId)
         .update({"availability": "available"});
-
-    // Add the "Status: REJECTED" attribute and transfer to "HISTORY" collection
     await FirebaseFirestore.instance
         .collection('History')
         .doc(buyerId)
@@ -809,23 +754,15 @@ class _ProfilePageState extends State<ProfilePage>
       "currentTime": orderSnapshot['currentTime'],
       "orderId": orderId,
     });
-
-    // Navigate to login page after successful registration
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => ProfilePage()),
-    // );
   }
 }
 
-//untuk category punya custom
 class CircleTabIndicator extends Decoration {
   final Color color;
-  double radius;
-  CircleTabIndicator({required this.color, required this.radius});
+  final double radius;
+  const CircleTabIndicator({required this.color, required this.radius});
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
-    //TODO: implemented createBoxPainter
     return _CirclePainter(color: color, radius: radius);
   }
 }

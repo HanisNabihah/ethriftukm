@@ -6,13 +6,12 @@ import '../screenSeller/product.dart';
 
 class ProductsWidgetFirestore extends StatefulWidget {
   final List<Product> products;
-  //const ProductsWidgetFirestore({Key? key});
 
-  final Function(String, double, String) onProductSelected; // Callback function
+  final Function(String, double, String) onProductSelected;
 
   const ProductsWidgetFirestore({
     Key? key,
-    required this.products, // Declare the products parameter as required
+    required this.products,
     required this.onProductSelected,
   }) : super(key: key);
 
@@ -78,26 +77,15 @@ class _ProductsWidgetFirestoreState extends State<ProductsWidgetFirestore> {
                       children: [
                         InkWell(
                           onTap: () {
-                            // Call the callback function when a product is selected
                             widget.onProductSelected(
-                              products[i]['name'], // Product name
-                              products[i]['price'], // Product price
-                              products[i]['image'], // Product image URL
+                              products[i]['name'],
+                              products[i]['price'],
+                              products[i]['image'],
                             );
-                            //Extract product details
-                            // Product product = Product(
-                            //   imgUrl: products[i]['image'],
-                            //   name: products[i]['name'],
-                            //   desc: products[i]['description'],
-                            //   price: products[i]['price'],
-                            // );
-
-                            // navigate to product details description
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => productDescPage(
-                                  //product: Product.fromSnapshot(products[i]),
+                                builder: (context) => ProductDescPage(
                                   imageUrl: products[i]['image'],
                                   productName: products[i]['name'],
                                   productPrice: products[i]['price'],
@@ -113,8 +101,7 @@ class _ProductsWidgetFirestoreState extends State<ProductsWidgetFirestore> {
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Image.network(
-                              products[i][
-                                  'image'], // Assuming 'image' is the field name for image URL
+                              products[i]['image'],
                               height: 170,
                               width: 200,
                               fit: BoxFit.cover,
@@ -126,8 +113,7 @@ class _ProductsWidgetFirestoreState extends State<ProductsWidgetFirestore> {
                           child: Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              products[i][
-                                  'name'], // Assuming 'name' is the field name for product name
+                              products[i]['name'],
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -139,7 +125,7 @@ class _ProductsWidgetFirestoreState extends State<ProductsWidgetFirestore> {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "RM ${products[i]['price']}", // Assuming 'price' is the field name for product price
+                            "RM ${products[i]['price']}",
                             style: const TextStyle(
                               fontSize: 12,
                             ),

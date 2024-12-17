@@ -1,5 +1,3 @@
-//ni page untuk design kotak tu
-
 import 'package:flutter/material.dart';
 
 class AllProductsWidget extends StatefulWidget {

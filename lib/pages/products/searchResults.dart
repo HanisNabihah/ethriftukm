@@ -17,7 +17,7 @@ class SearchResultsPage extends StatelessWidget {
         future: FirebaseFirestore.instance
             .collection('AllProducts')
             .where('name', isGreaterThanOrEqualTo: query.toLowerCase())
-            .where('name', isLessThanOrEqualTo: query.toLowerCase() + '\uf8ff')
+            .where('name', isLessThanOrEqualTo: '${query.toLowerCase()}\uf8ff')
             .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -39,7 +39,6 @@ class SearchResultsPage extends StatelessWidget {
             itemBuilder: (context, index) {
               Map<String, dynamic> productData =
                   searchResults[index].data() as Map<String, dynamic>;
-              // Ensure all necessary fields are non-null
               final imageUrl = productData['image'] ?? '';
               final productName = productData['name'] ?? 'No Name';
               final productPrice = productData['price'] ?? 0.0;
@@ -52,14 +51,13 @@ class SearchResultsPage extends StatelessWidget {
 
               return ListTile(
                 title: Text(productName),
-                subtitle: Text('Harga: RM ${productPrice}'),
+                subtitle: Text('Harga: RM $productPrice'),
                 leading: Image.network(imageUrl),
                 onTap: () {
-                  // Handle product tap (e.g., navigate to product detail page)
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => productDescPage(
+                      builder: (context) => ProductDescPage(
                         imageUrl: imageUrl,
                         productName: productName,
                         productPrice: productPrice,

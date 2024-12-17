@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class crudProductPage extends StatefulWidget {
+class CrudProductPage extends StatefulWidget {
   final String productId;
   final String imageUrl;
   final String productName;
@@ -11,7 +11,7 @@ class crudProductPage extends StatefulWidget {
   final String productDesc;
   final String productCategory;
 
-  const crudProductPage({
+  const CrudProductPage({
     Key? key,
     required this.productId,
     required this.imageUrl,
@@ -22,10 +22,10 @@ class crudProductPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<crudProductPage> createState() => _crudProductPageState();
+  State<CrudProductPage> createState() => _CrudProductPageState();
 }
 
-class _crudProductPageState extends State<crudProductPage> {
+class _CrudProductPageState extends State<CrudProductPage> {
   final List<String> categories = [
     "Women's Fashion",
     "Men's Fashion",
@@ -36,14 +36,14 @@ class _crudProductPageState extends State<crudProductPage> {
   final TextEditingController productNameController = TextEditingController();
   final TextEditingController productPriceController = TextEditingController();
   late String selectedCategory;
-  final TextEditingController DescriptionController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     productNameController.text = widget.productName;
     productPriceController.text = widget.productPrice.toString();
-    DescriptionController.text = widget.productDesc;
+    descriptionController.text = widget.productDesc;
     selectedCategory = widget.productCategory;
   }
 
@@ -53,9 +53,9 @@ class _crudProductPageState extends State<crudProductPage> {
       QuerySnapshot productsSnapshot =
           await FirebaseFirestore.instance.collection('AllProducts').get();
 
-      productsSnapshot.docs.forEach((doc) {
+      for (var doc in productsSnapshot.docs) {
         productIds.add(doc.id);
-      });
+      }
 
       return productIds;
     } catch (error) {
@@ -67,7 +67,7 @@ class _crudProductPageState extends State<crudProductPage> {
   Future<void> updateProductDetails() async {
     String updatedName = productNameController.text;
     double updatedPrice = double.parse(productPriceController.text);
-    String updatedDescription = DescriptionController.text;
+    String updatedDescription = descriptionController.text;
     String updatedCategory = selectedCategory;
 
     try {
@@ -359,7 +359,7 @@ class _crudProductPageState extends State<crudProductPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: TextFormField(
-            controller: DescriptionController,
+            controller: descriptionController,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               labelText: 'Diskripsi',

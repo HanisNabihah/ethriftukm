@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-class paymentPage extends StatefulWidget {
-  const paymentPage({super.key});
+class PaymentPage extends StatefulWidget {
+  const PaymentPage({super.key});
 
   @override
-  State<paymentPage> createState() => _paymentPageState();
+  State<PaymentPage> createState() => _PaymentPageState();
 }
 
-class _paymentPageState extends State<paymentPage> {
-  // final _deliveryMethodList = ["Pickup", "Delivery"];
-
+class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,7 +15,6 @@ class _paymentPageState extends State<paymentPage> {
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
-              // Navigate back to the main menu
               Navigator.pop(context);
             },
             icon: const Icon(

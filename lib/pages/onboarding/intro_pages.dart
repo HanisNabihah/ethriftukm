@@ -14,16 +14,12 @@ class IntroPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //logo
               Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: Image.asset(
                   'lib/images/e-thrift.png',
-                  //height: 240,
                 ),
               ),
-
-              //preloved is reloved
               const Text(
                 'PRELOVED IS',
                 style: TextStyle(
@@ -31,7 +27,6 @@ class IntroPage extends StatelessWidget {
                   fontSize: 30,
                 ),
               ),
-
               const Text(
                 'RELOVED',
                 style: TextStyle(
@@ -39,10 +34,7 @@ class IntroPage extends StatelessWidget {
                   fontSize: 30,
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              //ayat panjang
               const Text(
                 'Mencari tawaran terbaik untuk barangan terpakai',
                 style: TextStyle(
@@ -50,7 +42,6 @@ class IntroPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-
               const Text(
                 'Kami disini untuk membantu anda !',
                 style: TextStyle(
@@ -58,10 +49,7 @@ class IntroPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-
               const SizedBox(height: 30),
-
-              //button login
               GestureDetector(
                   onTap: () => Navigator.push(
                         context,
@@ -89,10 +77,7 @@ class IntroPage extends StatelessWidget {
                       ),
                     ),
                   )),
-
               const SizedBox(height: 30),
-
-              //textButton register
               const Text(
                 'Masih Tiada Akaun?',
                 style: TextStyle(
@@ -100,7 +85,6 @@ class IntroPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-
               Center(
                 child: GestureDetector(
                   onTap: () => Navigator.push(
@@ -113,12 +97,11 @@ class IntroPage extends StatelessWidget {
                     width: 300,
                     child: Text(
                       'Daftar Disini !',
-                      textAlign:
-                          TextAlign.center, // Center the text horizontally
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 17,
                         decoration: TextDecoration.underline,
-                        color: Colors.purple, // Change color as needed
+                        color: Colors.purple,
                       ),
                     ),
                   ),

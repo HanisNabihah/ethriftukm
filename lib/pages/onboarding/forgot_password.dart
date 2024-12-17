@@ -22,16 +22,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //logo
               Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: Image.asset(
                   'lib/images/e-thrift.png',
-                  //height: 240,
                 ),
               ),
-
-              // text RESET PASSWORD
               const Text(
                 'Lupa Kata Laluan?',
                 style: TextStyle(
@@ -40,14 +36,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
               ),
               const SizedBox(height: 30),
-
-              //textfield Email
               buildEmail(),
-
               const SizedBox(height: 30),
-
-              //button reset password
-              Container(
+              SizedBox(
                 width: 280,
                 child: RawMaterialButton(
                   fillColor: const Color.fromARGB(255, 101, 13, 6),
@@ -71,7 +62,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 24),
             ],
           ),
@@ -80,11 +70,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 
-  // function Email
-  // function Email
   SizedBox buildEmail() {
     return SizedBox(
-      width: 350, // Adjust the width as needed
+      width: 350,
       child: TextFormField(
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
@@ -96,32 +84,26 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          // You can add more styling here if needed
         ),
       ),
     );
   }
 
-  // Function to reset password
   Future<void> _resetPassword() async {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: _emailController.text.trim());
-      // Show a success message or navigate to a success page
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Password reset email sent. Please check your email.'),
           duration: Duration(seconds: 5),
         ),
       );
-
-      // Navigate to the login page after showing the success message
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
     } catch (error) {
-      // Show an error message if something goes wrong
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to send password reset email. $error'),

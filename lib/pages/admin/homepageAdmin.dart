@@ -9,14 +9,14 @@ import 'package:image_picker/image_picker.dart';
 
 import '../onboarding/login.dart';
 
-class homepageAdmin extends StatefulWidget {
-  const homepageAdmin({Key? key}) : super(key: key);
+class HomepageAdmin extends StatefulWidget {
+  const HomepageAdmin({Key? key}) : super(key: key);
 
   @override
-  _homepageAdminState createState() => _homepageAdminState();
+  _HomepageAdminState createState() => _HomepageAdminState();
 }
 
-class _homepageAdminState extends State<homepageAdmin>
+class _HomepageAdminState extends State<HomepageAdmin>
     with TickerProviderStateMixin {
   var height, width;
   File? selectedImage;
@@ -56,7 +56,7 @@ class _homepageAdminState extends State<homepageAdmin>
         color: const Color.fromARGB(174, 113, 95, 182),
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: height * 0.30,
               width: width,
               child: Stack(
@@ -125,15 +125,8 @@ class _homepageAdminState extends State<homepageAdmin>
                   ),
                   GestureDetector(
                     onTap: () {
-                      _showEditDialog(); // Call a function to open the gallery picker
+                      _showEditDialog();
                     },
-                    // child: SizedBox(
-                    //   width: 150,
-                    //   height: 150,
-                    //   child: CircleAvatar(
-                    //     backgroundImage: AssetImage('lib/images/nana.png'),
-                    //   ),
-                    // ),
                   ),
                 ],
               ),
@@ -157,9 +150,7 @@ class _homepageAdminState extends State<homepageAdmin>
               height: height * 0.7,
               width: width,
               child: GestureDetector(
-                onTap: () {
-                  // Add onTap functionality here
-                },
+                onTap: () {},
                 child: Column(
                   children: [
                     const SizedBox(height: 150),
@@ -193,7 +184,7 @@ class _homepageAdminState extends State<homepageAdmin>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const listUser()),
+                                builder: (context) => const ListUser()),
                           );
                         },
                         style: ButtonStyle(
@@ -247,7 +238,7 @@ class _homepageAdminState extends State<homepageAdmin>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const listProducts()),
+                                builder: (context) => const ListProducts()),
                           );
                         },
                         style: ButtonStyle(
@@ -359,7 +350,6 @@ class _homepageAdminState extends State<homepageAdmin>
   void _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
-      // Navigate to login page after logout
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
@@ -367,11 +357,9 @@ class _homepageAdminState extends State<homepageAdmin>
       );
     } catch (error) {
       print('Error logging out: $error');
-      // Handle logout error
     }
   }
 
-  // Pick image from gallery
   Future openGallery() async {
     final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);

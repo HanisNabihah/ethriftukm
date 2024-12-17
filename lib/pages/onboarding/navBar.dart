@@ -9,7 +9,7 @@ import 'package:ethriftukm_fyp/pages/products/computerTech.dart';
 import 'package:ethriftukm_fyp/pages/products/mensFashion.dart';
 import 'package:ethriftukm_fyp/pages/products/womensFashion.dart';
 
-class navBar extends StatelessWidget {
+class NavBar extends StatelessWidget {
   Future<Map<String, dynamic>> _fetchUserData() async {
     String userID = FirebaseAuth.instance.currentUser!.uid;
     DocumentSnapshot<Map<String, dynamic>> userSnapshot =
@@ -17,7 +17,7 @@ class navBar extends StatelessWidget {
     return userSnapshot.data() ?? {};
   }
 
-  const navBar({super.key});
+  const NavBar({super.key});
 
   Future<DocumentSnapshot?> getUserData() async {
     try {
@@ -62,7 +62,6 @@ class navBar extends StatelessWidget {
                               height: 90,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
-                                // Handle image loading error
                                 return Image.asset(
                                   'lib/images/default-profilephoto.jpeg',
                                   width: 90,
@@ -80,66 +79,51 @@ class navBar extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                //Woman's Fashion
                 ListTile(
                   leading: const Icon(Icons.home),
                   title: const Text("Women's Fashion "),
                   onTap: () {
-                    // Navigate to Home page
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const WomensFashionPage()));
                   },
                 ),
-
-                //Men's Fashion
                 ListTile(
                   leading: const Icon(Icons.history),
                   title: const Text("Men's Fashion "),
                   onTap: () {
-                    // Navigate to Home page
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const MensFashionPage()));
                   },
                 ),
-
-                //Beauty & Personal Care
                 ListTile(
                   leading: const Icon(Icons.account_circle_outlined),
                   title: const Text('Beauty & Personal Care'),
                   onTap: () {
-                    // Navigate to Home page
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const BeautySkincarePage()));
                   },
                 ),
-
-                //Computer Teech
                 ListTile(
                   leading: const Icon(Icons.favorite),
                   title: const Text('Computer Tech'),
                   onTap: () {
-                    // Navigate to Home page
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const ComputerTechPage()));
                   },
                 ),
-
                 const SizedBox(height: 380),
-
                 ListTile(
                   leading: const Icon(Icons.exit_to_app),
                   title: const Text('Log Keluar'),
                   onTap: () {
-                    // Navigate to Home page
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

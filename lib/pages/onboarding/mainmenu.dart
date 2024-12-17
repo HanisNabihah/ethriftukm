@@ -70,16 +70,13 @@ class _MainMenuPageState extends State<MainMenuPage>
   }
 
   String searchQuery = '';
-  // }
+
   List<DocumentSnapshot> searchResults = [];
 
   Future<void> searchProduct(String query) async {
-    // Clear previous search results
     setState(() {
       searchResults = [];
     });
-
-    // Query Firestore for products matching the search term
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('AllProducts')
@@ -152,10 +149,8 @@ class _MainMenuPageState extends State<MainMenuPage>
 
   @override
   Widget build(BuildContext context) {
-    // TabController _tabController = TabController(length: 4, vsync: this);
-
     return Scaffold(
-      drawer: const navBar(),
+      drawer: const NavBar(),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () => _refreshData(true),
@@ -168,7 +163,6 @@ class _MainMenuPageState extends State<MainMenuPage>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      //Welcoming The user
                       Text(
                         'Selamat Datang $_username!',
                         style: const TextStyle(
@@ -177,8 +171,6 @@ class _MainMenuPageState extends State<MainMenuPage>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
-                      //tempat favourite/likes macam add to cart
                       Container(
                         padding: const EdgeInsets.all(7),
                         decoration: BoxDecoration(
@@ -194,7 +186,6 @@ class _MainMenuPageState extends State<MainMenuPage>
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            // Navigate to the selected page
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -215,8 +206,6 @@ class _MainMenuPageState extends State<MainMenuPage>
                     ],
                   ),
                 ),
-
-                //search box
                 const SizedBox(height: 15),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -243,7 +232,6 @@ class _MainMenuPageState extends State<MainMenuPage>
                             });
                           },
                           onSubmitted: (value) {
-                            //searchProduct(value);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -260,7 +248,6 @@ class _MainMenuPageState extends State<MainMenuPage>
                       ),
                       GestureDetector(
                         onTap: () {
-                          //searchProduct(searchQuery);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -278,10 +265,7 @@ class _MainMenuPageState extends State<MainMenuPage>
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 30),
-
-                //list of category (tabbar)
                 SizedBox(
                   height: 200,
                   child: ListView.builder(
@@ -292,7 +276,6 @@ class _MainMenuPageState extends State<MainMenuPage>
                         padding: const EdgeInsets.all(10.0),
                         child: GestureDetector(
                           onTap: () {
-                            // Navigate to the desired location based on the category index
                             navigateToCategoryLocation(index);
                           },
                           child: Column(
@@ -304,17 +287,14 @@ class _MainMenuPageState extends State<MainMenuPage>
                                   shape: BoxShape.circle,
                                   color: Colors.white,
                                 ),
-                                // Placeholder for the image or photo
                                 child: Image.asset(
                                   images[index],
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              const SizedBox(
-                                  height: 8), // Adjust spacing as needed
+                              const SizedBox(height: 8),
                               Text(
-                                categoryNames[
-                                    index], // Replace with actual category name
+                                categoryNames[index],
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -327,10 +307,7 @@ class _MainMenuPageState extends State<MainMenuPage>
                     },
                   ),
                 ),
-
                 const SizedBox(height: 15),
-
-                //gambar product (gambar, nama, harga)
                 ProductsWidgetFirestore(
                   products: availableProducts,
                   onProductSelected: handleProductSelected,
@@ -340,8 +317,6 @@ class _MainMenuPageState extends State<MainMenuPage>
           ),
         ),
       ),
-
-      //bottom navigation bar (home, history, add product, comment, profile)
       bottomNavigationBar: Container(
         color: Colors.black,
         child: Padding(
@@ -354,38 +329,31 @@ class _MainMenuPageState extends State<MainMenuPage>
             onTabChange: (index) {
               switch (index) {
                 case 0:
-                  // Navigate to the Home page
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const MainMenuPage()));
                   break;
-
                 case 1:
-                  // Navigate to the History page
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const HistoryPage()));
                   break;
                 case 2:
-                  // Navigate to the Sell Product page
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          //builder: (context) => uploadProductPage()));
                           builder: (context) =>
                               const UploadProductFirestorePage()));
                   break;
                 case 3:
-                  // Navigate to the Comment page
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const ReviewPage()));
                   break;
                 case 4:
-                  // Navigate to the Profile page
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -396,7 +364,6 @@ class _MainMenuPageState extends State<MainMenuPage>
             tabs: const [
               GButton(
                 icon: Icons.home,
-                //text: 'Home'
               ),
               GButton(icon: Icons.history),
               GButton(icon: Icons.add_box),
@@ -410,11 +377,10 @@ class _MainMenuPageState extends State<MainMenuPage>
   }
 }
 
-//untuk category punya custom
 class CircleTabIndicator extends Decoration {
   final Color color;
-  double radius;
-  CircleTabIndicator({required this.color, required this.radius});
+  final double radius;
+  const CircleTabIndicator({required this.color, required this.radius});
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
     return _CirclePainter(color: color, radius: radius);

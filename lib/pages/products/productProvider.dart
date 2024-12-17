@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../screenSeller/product.dart';
 
 class ProductProvider with ChangeNotifier {
-  List<Product> _products = [];
+  final List<Product> _products = [];
 
   List<Product> get products => _products;
 

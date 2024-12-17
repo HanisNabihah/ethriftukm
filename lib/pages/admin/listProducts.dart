@@ -1,32 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class listProducts extends StatefulWidget {
-  const listProducts({Key? key});
+class ListProducts extends StatefulWidget {
+  const ListProducts({super.key});
 
   @override
-  State<listProducts> createState() => _listProductsState();
+  State<ListProducts> createState() => _ListProductsState();
 }
 
-class _listProductsState extends State<listProducts> {
+class _ListProductsState extends State<ListProducts> {
   Future<List<Map<String, dynamic>>> _fetchProductsData() async {
     try {
       QuerySnapshot productSnapshot = await FirebaseFirestore.instance
           .collection('AllProducts')
-          .where('availability',
-              isEqualTo: 'available') // Filter products that are available
+          .where('availability', isEqualTo: 'available')
           .get();
 
       List<Map<String, dynamic>> productsData = productSnapshot.docs.map((doc) {
         Map<String, dynamic> productData = doc.data() as Map<String, dynamic>;
-        productData['productId'] =
-            doc.id; // Assign productId to each product data
+        productData['productId'] = doc.id;
         return productData;
       }).toList();
 
       return productsData;
     } catch (error) {
-      // Handle error
       print('Error fetching products data: $error');
       return [];
     }
@@ -38,7 +35,6 @@ class _listProductsState extends State<listProducts> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -47,7 +43,6 @@ class _listProductsState extends State<listProducts> {
         ),
         title: const Text(
           'Senarai Produk',
-          // style: Theme.of(context).textTheme.headline6,
         ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
@@ -128,7 +123,6 @@ class _listProductsState extends State<listProducts> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    // Implement delete functionality here
                                     _showDeleteDialog(productData['productId']);
                                   },
                                   child: const Icon(
@@ -158,26 +152,24 @@ class _listProductsState extends State<listProducts> {
       builder: (context) {
         return AlertDialog(
           title: const Text("Pilih Sebab:"),
-          content: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  title: const Text("Produk Tidak Relevan"),
-                  onTap: () {
-                    _deleteProduct(productId);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: const Text("Lain-Lain"),
-                  onTap: () {
-                    _deleteProduct(productId);
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text("Produk Tidak Relevan"),
+                onTap: () {
+                  _deleteProduct(productId);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text("Lain-Lain"),
+                onTap: () {
+                  _deleteProduct(productId);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ),
           actions: [
             TextButton(

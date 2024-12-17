@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ethriftukm_fyp/pages/onboarding/mainmenu.dart';
 import 'package:intl/intl.dart';
-// import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class checkoutProductPage extends StatefulWidget {
+class CheckoutProductPage extends StatefulWidget {
   final String imageUrl;
   final String productName;
   final double productPrice;
@@ -15,7 +14,7 @@ class checkoutProductPage extends StatefulWidget {
   final String sellerId;
   final String productId;
 
-  const checkoutProductPage({
+  const CheckoutProductPage({
     Key? key,
     required this.imageUrl,
     required this.productName,
@@ -27,13 +26,13 @@ class checkoutProductPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<checkoutProductPage> createState() => _checkoutProductPageState();
+  State<CheckoutProductPage> createState() => _CheckoutProductPageState();
 }
 
 final CollectionReference<Map<String, dynamic>> dbEthriftRef =
     FirebaseFirestore.instance.collection('Orders');
 
-class _checkoutProductPageState extends State<checkoutProductPage> {
+class _CheckoutProductPageState extends State<CheckoutProductPage> {
   String selectedPaymentMethod = 'none selected';
   String? selectedDeliveryMethod = 'none selected';
 
@@ -45,31 +44,22 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
   late String sellerID;
   late String image;
 
-  // Razorpay _razorpay = Razorpay();
-
   var currentDateTime;
 
   @override
   void initState() {
     super.initState();
-
-    //_razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    // _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    // _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-
-    // Set the product details using passed arguments
     productName = widget.productName;
     productPrice = widget.productPrice;
-    username = widget.username; //seller username
+    username = widget.username;
     sellerEmail = widget.sellerEmail;
     sellerID = widget.sellerId;
-    image = widget.imageUrl; // pass gambar product
+    image = widget.imageUrl;
   }
 
   @override
   void dispose() {
     super.dispose();
-    // _razorpay.clear(); //remove al listeners
   }
 
   // void _handlePaymentSuccess(PaymentSuccessResponse response) {
@@ -162,7 +152,7 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
       child: Text(
         'Card',
         style: TextStyle(
-          color: Colors.black, // Set text color to black
+          color: Colors.black,
         ),
       ),
     ),
@@ -171,7 +161,7 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
       child: Text(
         'Cash',
         style: TextStyle(
-          color: Colors.black, // Set text color to black
+          color: Colors.black,
         ),
       ),
     ),
@@ -180,17 +170,14 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
-    // Format the date and time separately
-    String formattedDate = DateFormat('EEEE, MMMM d y')
-        .format(now); // Example: Monday, January 1 2024
+    String formattedDate = DateFormat('EEEE, MMMM d y').format(now);
 
-    String formattedTime = DateFormat('HH:mm').format(now); // Example: 14:30
+    String formattedTime = DateFormat('HH:mm').format(now);
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -223,7 +210,7 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                     child: Text(
-                      'Nama Penjual: ${username}',
+                      'Nama Penjual: $username',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -258,8 +245,7 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
-                            image: NetworkImage(widget
-                                .imageUrl), // Use the passed image URL here
+                            image: NetworkImage(widget.imageUrl),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -295,8 +281,6 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                 ],
               ),
             ),
-
-            //date
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -324,8 +308,6 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                 ),
               ],
             ),
-
-            //delivery method
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Text(
@@ -337,8 +319,6 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                 ),
               ),
             ),
-
-            // Radio buttons for delivery method
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
@@ -367,11 +347,9 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                 ],
               ),
             ),
-
-            // payment method
             const SizedBox(height: 20),
             const Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+              padding: EdgeInsets.all(20),
               child: Text(
                 'Kaedah Pembayaran:',
                 style: TextStyle(
@@ -381,7 +359,6 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
@@ -395,8 +372,8 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                   hint: const Text(
                     'Pilih Kaedah Pembayaran',
                     style: TextStyle(
-                      color: Colors.white, // Set text color to white
-                      fontSize: 16, // Set text size to 20
+                      color: Colors.white,
+                      fontSize: 16,
                     ),
                   ),
                   style: const TextStyle(fontWeight: FontWeight.w600),
@@ -408,8 +385,6 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                 ),
               ),
             ),
-
-            // total price
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -435,9 +410,6 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                 ],
               ),
             ),
-
-            //button checkout
-            // Button
             const SizedBox(height: 5),
             Container(
               width: double.infinity,
@@ -456,21 +428,9 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
                       onPressed: () {
                         if (selectedPaymentMethod == 'Card') {
                           PaymentNow(productPrice);
-                          // Pass the amount as per your requirement
                         } else if (selectedPaymentMethod == 'Cash') {
-                          // Generate a custom payment ID for cash payment
                           onPaymentSuccess();
-
-                          // Show payment success message
-
-                          // Navigate back to the main menu
-                          // Navigator.pushReplacement(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => MainMenuPage()),
-                          // );
                         } else {
-                          // Handle case where payment method is not selected
                           Fluttertoast.showToast(
                             msg: "Please select a payment method",
                             toastLength: Toast.LENGTH_SHORT,
@@ -497,102 +457,58 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
   }
 
   void PaymentNow(double productPrice) {
-    // Convert product price to the smallest currency unit (e.g., paise, cents)
-    int amountInPaise = (productPrice * 100)
-        .round(); // Assuming the currency is in RM (Malaysian Ringgit)
-
-    // Generate a custom payment ID for cash payment
-    String paymentId = 'cash_${DateTime.now().millisecondsSinceEpoch}';
-
-    var options = {
-      'key': 'rzp_test_b51VPQzfFPzvwD', // aqil punya razorpay key id
-      //'key': 'rzp_test_rQw0BYEcOhy8Bj', // Replace with your Razorpay key
-      'amount': amountInPaise,
-      'name': 'eThrift UKM',
-      'description': 'Reference No. #123456',
-      'prefill': {'email': 'anis.biha88@gmail.com', 'contact': '0196773641'},
-      // 'external': {
-      //   'wallets': ['paytm']
-      // },
-      'currency': 'MYR', // Set the currency here
-      'paymentId': paymentId,
-      //'image': 'lib/images/e-thrift.png', // URL to your logo image
-    };
-
-    try {
-      // _razorpay.open(options);
-    } catch (e) {
-      // debugPrint('Error in starting Razorpay Checkout: $e');
+    try {} catch (e) {
+      print(e);
     }
   }
 
-  //if the transaction is success
-
   Future<void> onPaymentSuccess() async {
-    // Get the current user
     String buyerID = FirebaseAuth.instance.currentUser!.uid;
-
-    // Get the name of the buyer
     DocumentSnapshot userSnapshot =
         await FirebaseFirestore.instance.collection('Users').doc(buyerID).get();
     String username = userSnapshot['username'];
 
-    // Generate order id
     String orderId = FirebaseFirestore.instance.collection('Orders').doc().id;
 
-    // Get the current date and time
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('EEEE, MMMM d y')
-        .format(now); // Example: Monday, January 1 2024
+    String formattedDate = DateFormat('EEEE, MMMM d y').format(now);
     String formattedTime = DateFormat('HH:mm').format(now);
 
-    // Define the order reference
     DocumentReference orderRef = FirebaseFirestore.instance
         .collection('Orders')
         .doc(buyerID)
         .collection(sellerID)
         .doc(orderId);
-
-    // Update product availability to "not available" for the purchased product
     await FirebaseFirestore.instance
         .collection('AllProducts')
-        .doc(widget.productId) // Access productId from widget
+        .doc(widget.productId)
         .update({
       "availability": "not available",
     });
 
-    // Update product availability to "not available" (pov seller)
     await FirebaseFirestore.instance
         .collection('Products')
         .doc(sellerID)
         .collection('Products')
-        .doc(widget.productId) // Access productId from widget
+        .doc(widget.productId)
         .update({
       "availability": "not available",
     });
-
-    // Store order details in Firestore under "Orders"
     await orderRef.set({
       "productName": productName,
       "productPrice": productPrice,
       "deliveryMethod": selectedDeliveryMethod,
       "paymentMethod": selectedPaymentMethod,
-      "sellerName": widget
-          .username, // Assuming sellerName is stored in Products collection
-      "sellerEmail":
-          sellerEmail, // Assuming sellerEmail is stored in Products collection
+      "sellerName": widget.username,
+      "sellerEmail": sellerEmail,
       "buyerName": username,
-      "buyerId": buyerID, // Assuming buyer name is stored in Users collection
+      "buyerId": buyerID,
       "image": image,
       "currentDate": formattedDate,
-      "currentTime": formattedTime, // Add current time
+      "currentTime": formattedTime,
       "orderId": orderId,
       "productId": widget.productId,
-      // You can add more fields here if needed
     });
-
-    // Store order details in Firestore under "Sales"
-    // Store product details in the "AllProducts" collection
     await FirebaseFirestore.instance
         .collection('Sales')
         .doc(sellerID)
@@ -603,10 +519,8 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
       "productPrice": productPrice,
       "deliveryMethod": selectedDeliveryMethod,
       "paymentMethod": selectedPaymentMethod,
-      "sellerName": widget
-          .username, // Assuming sellerName is stored in Products collection
-      "sellerEmail":
-          sellerEmail, // Assuming sellerEmail is stored in Products collection
+      "sellerName": widget.username,
+      "sellerEmail": sellerEmail,
       "buyerName": username,
       "buyerId": buyerID,
       "image": image,
@@ -616,7 +530,6 @@ class _checkoutProductPageState extends State<checkoutProductPage> {
       "productId": widget.productId,
     });
 
-    // Navigate back to the main menu
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const MainMenuPage()),

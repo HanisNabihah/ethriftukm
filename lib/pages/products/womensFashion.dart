@@ -12,24 +12,21 @@ class WomensFashionPage extends StatefulWidget {
 }
 
 class _WomensFashionPageState extends State<WomensFashionPage> {
-  // Add a future to fetch products from Firestore
   late Future<List<DocumentSnapshot>> _productsFuture;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the future to fetch products
     _productsFuture = _fetchProducts();
   }
 
   Future<List<DocumentSnapshot>> _fetchProducts() async {
-    // Query Firestore to fetch products
-    QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await FirebaseFirestore.instance
-            .collection('AllProducts')
-            .where('category', isEqualTo: "Women's Fashion")
-            .where('availability', isEqualTo: 'available') // Filter by category
-            .get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('AllProducts')
+        .where('category', isEqualTo: "Women's Fashion")
+        .where('availability', isEqualTo: 'available')
+        .get();
     return querySnapshot.docs;
   }
 
@@ -39,12 +36,9 @@ class _WomensFashionPageState extends State<WomensFashionPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const MainMenuPage()), // Replace MainMenu with your main menu widget
+              MaterialPageRoute(builder: (context) => const MainMenuPage()),
               (Route<dynamic> route) => false,
             );
           },
@@ -95,7 +89,7 @@ class _WomensFashionPageState extends State<WomensFashionPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => productDescPage(
+                                  builder: (context) => ProductDescPage(
                                     imageUrl: products[i]['image'],
                                     productName: products[i]['name'],
                                     productPrice: products[i]['price'],

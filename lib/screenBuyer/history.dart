@@ -12,7 +12,6 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   late Future<List<DocumentSnapshot>> _historyFuture;
-  // bool _reviewSubmitted = false;
 
   @override
   void initState() {
@@ -27,7 +26,6 @@ class _HistoryPageState extends State<HistoryPage> {
         .doc(buyerID)
         .collection('HistoryDetails')
         .orderBy('currentDate', descending: false)
-        // .orderBy('currentTime', descending: true)
         .get();
     return querySnapshot.docs;
   }
@@ -38,8 +36,6 @@ class _HistoryPageState extends State<HistoryPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            // Navigate back to the main menu
-            // Navigator.pop(context);
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -52,17 +48,14 @@ class _HistoryPageState extends State<HistoryPage> {
         future: _historyFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // Display a loading indicator while waiting for data
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            // Display an error message if an error occurs
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             List<DocumentSnapshot> products = snapshot.data ?? [];
             if (products.isEmpty) {
               return const Center(child: Text('Tiada pembelian dijumpai'));
             } else {
-              // Extract data from the snapshot and build the UI
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
