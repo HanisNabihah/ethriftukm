@@ -1,10 +1,10 @@
 # ethriftukm
 
-A new Flutter project.
+A fina year project
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is my first Flutter project .
 
 A few resources to get you started if this is your first Flutter project:
 
