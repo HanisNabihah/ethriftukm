@@ -1,4 +1,4 @@
-# ethriftukm
+# UKM - FYP
 
 A fina year project
 
