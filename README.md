@@ -1,6 +1,6 @@
 # UKM - FYP
 
-A fina year project
+A final year project which E-Thrift UKM 
 
 ## Getting Started
 
